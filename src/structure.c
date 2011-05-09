@@ -67,9 +67,9 @@ SEXP xxt(const SEXP Snps, const SEXP Strata, const SEXP Correct_for_missing,
     cl = R_data_class(Snps, FALSE); /* S4 way of getting class attribute */
   }
   if (!strcmp(CHAR(STRING_ELT(cl, 0)), "XSnpMatrix")) {
-    SEXP Female = R_do_slot(Snps, mkString("Female"));
+    SEXP Female = R_do_slot(Snps, mkString("diploid"));
     if (TYPEOF(Female)!=LGLSXP)
-      error("Argument error -  Female slot wrong type");
+      error("Argument error -  diploid slot wrong type");
     ifFemale = LOGICAL(Female);
   }
   else if (strcmp(CHAR(STRING_ELT(cl, 0)), "SnpMatrix")) {
@@ -387,9 +387,9 @@ SEXP ibs_count(const SEXP Snps, const SEXP Uncertain) {
     cl = R_data_class(Snps, FALSE); /* S4 way of getting class attribute */
   }
   if (!strcmp(CHAR(STRING_ELT(cl, 0)), "XSnpMatrix")) {
-    SEXP Female = R_do_slot(Snps, mkString("Female"));
+    SEXP Female = R_do_slot(Snps, mkString("diploid"));
     if (TYPEOF(Female)!=LGLSXP)
-      error("Argument error -  Female slot wrong type");
+      error("Argument error -  diploid slot wrong type");
     ifFemale = LOGICAL(Female);
   }
   else if (strcmp(CHAR(STRING_ELT(cl, 0)), "SnpMatrix")) {
