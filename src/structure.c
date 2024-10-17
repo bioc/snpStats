@@ -102,10 +102,10 @@ SEXP xxt(const SEXP Snps, const SEXP Strata, const SEXP Correct_for_missing,
       error("Argument error - Strata argument wrong length");
     strata = INTEGER(Strata);
     nstrata = nlevels(Strata);
-    count = Calloc(nstrata, int);
-    acount = (double *)Calloc(nstrata, double);
-    mu = Calloc(nstrata, double);
-    sd = Calloc(nstrata, double);
+    count = R_Calloc(nstrata, int);
+    acount = (double *)R_Calloc(nstrata, double);
+    mu = R_Calloc(nstrata, double);
+    sd = R_Calloc(nstrata, double);
   }
   double mean=0.0, sd2=0.0; 
 
@@ -115,9 +115,9 @@ SEXP xxt(const SEXP Snps, const SEXP Strata, const SEXP Correct_for_missing,
   if (correct) {
     warning("With correct.for.missing option set, result may not be a positive semi-definite matrix");
     T = 0;
-    Ti = Calloc(N, int);
+    Ti = R_Calloc(N, int);
     memset(Ti, 0x00, N*sizeof(int));
-    Tk = Calloc(M, int);
+    Tk = R_Calloc(M, int);
     memset(Tk, 0x00, M*sizeof(int));
     R_xlen_t ik = 0;
     for (int k=0; k<M; k++) {
@@ -286,14 +286,14 @@ SEXP xxt(const SEXP Snps, const SEXP Strata, const SEXP Correct_for_missing,
   /* Return work space */
 
   if (correct) {
-    Free(Tk);
-    Free(Ti);
+    R_Free(Tk);
+    R_Free(Ti);
   }
   if (strata) {
-    Free(acount);
-    Free(count);
-    Free(mu);
-    Free(sd);
+    R_Free(acount);
+    R_Free(count);
+    R_Free(mu);
+    R_Free(sd);
   }
       
   UNPROTECT(2);

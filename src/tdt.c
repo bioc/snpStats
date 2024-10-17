@@ -93,7 +93,7 @@ SEXP score_tdt(const SEXP Proband, const SEXP Father, const SEXP Mother,
       error("Argument error - Rules");
     nrules = LENGTH(Rules);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++) 
       gt2ht[i] = create_gtype_table(i+1);
   }
@@ -178,8 +178,8 @@ SEXP score_tdt(const SEXP Proband, const SEXP Father, const SEXP Mother,
   double *xadd = NULL;
   double *xdom = NULL;
   if (nrules) {
-    xadd = (double *) Calloc(nsubj, double);
-    xdom = (double *) Calloc(nsubj, double);
+    xadd = (double *) R_Calloc(nsubj, double);
+    xdom = (double *) R_Calloc(nsubj, double);
   }
 
   /* Do calculations */
@@ -366,11 +366,11 @@ SEXP score_tdt(const SEXP Proband, const SEXP Father, const SEXP Mother,
 
   index_destroy(name_index);
   if (nrules) {
-    Free(xadd);
-    Free(xdom);
+    R_Free(xadd);
+    R_Free(xdom);
     for (int i=0; i<pmax; i++)
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   /* Attributes of output object */

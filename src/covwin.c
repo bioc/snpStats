@@ -42,20 +42,20 @@
 #include "covwin.h"
 
 COV_WIN_PTR new_window(const int size, const int start) {
-  COV_WIN_PTR res = (COV_WIN_PTR) Calloc(1, COV_WIN);
+  COV_WIN_PTR res = (COV_WIN_PTR) R_Calloc(1, COV_WIN);
   res->size = size;
   res->start = start;
   res->start_local = 0;
   int ncov = (size*(size+1))/2;
-  res->covariances = (double *) Calloc(ncov, double);
+  res->covariances = (double *) R_Calloc(ncov, double);
   for (int i=0; i<ncov; i++)
     res->covariances[i] = NA_REAL;
   return res;
 }
 
 void free_window(COV_WIN_PTR win) {
-  Free(win->covariances);
-  Free(win);
+  R_Free(win->covariances);
+  R_Free(win);
 }
 
 void move_window(COV_WIN_PTR win, const int new_start){

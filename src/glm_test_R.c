@@ -230,8 +230,8 @@ SEXP snp_lhs_score(const SEXP Y, const SEXP X, const SEXP Stratum,
       v = REAL(V);
     }
     else {
-      u = (double *) Calloc(P, double);
-      v = (double *) Calloc((P*(P+1))/2, double);
+      u = (double *) R_Calloc(P, double);
+      v = (double *) R_Calloc((P*(P+1))/2, double);
     }
  
     /* Load SNP as Binomial y-variate, with prior weights */
@@ -334,8 +334,8 @@ SEXP snp_lhs_score(const SEXP Y, const SEXP X, const SEXP Stratum,
     /* Return work space */
 
     if (!if_score) {
-      Free(u);
-      Free(v);
+      R_Free(u);
+      R_Free(v);
     }
   }
   
@@ -488,7 +488,7 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
     name_index = create_name_index(Snp_names);
     Rule_names = getAttrib(Rules, R_NamesSymbol);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
   }
@@ -690,8 +690,8 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
       v = REAL(V);
     }
     else {
-      u = (double *) Calloc(nsnpt, double);
-      v = (double *) Calloc((nsnpt*(nsnpt+1))/2, double);
+      u = (double *) R_Calloc(nsnpt, double);
+      v = (double *) R_Calloc((nsnpt*(nsnpt+1))/2, double);
     }
 
     for (int i=0; i<N; i++)
@@ -829,8 +829,8 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
       UNPROTECT(3); /* Scoret, U and V */
     }
     else {
-      Free(u);
-      Free(v);
+      R_Free(u);
+      R_Free(v);
     }
     if (test_size>1)
       UNPROTECT(1); /* Snames */
@@ -842,7 +842,7 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
     index_destroy(name_index);
     for (int i=0; i<pmax; i++)
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   SEXP Class, Package;
@@ -923,8 +923,8 @@ SEXP pool2_glm(SEXP X, SEXP Y, SEXP If_score) {
       rv = REAL(RV);
     }
     else {
-      ru = (double *) Calloc(nu, double);
-      rv = (double *) Calloc(nv, double);
+      ru = (double *) R_Calloc(nu, double);
+      rv = (double *) R_Calloc(nv, double);
     }
     memset(ru, 0x00, nu*sizeof(double));
     memset(rv, 0x00, nv*sizeof(double));
@@ -963,8 +963,8 @@ SEXP pool2_glm(SEXP X, SEXP Y, SEXP If_score) {
       UNPROTECT(3); /* RU, RV, Scorei */
     }
     else {
-      Free(ru);
-      Free(rv);
+      R_Free(ru);
+      R_Free(rv);
     }
   }
   R_do_slot_assign(Result, mkString("snp.names"), Test_names);
@@ -1416,7 +1416,7 @@ SEXP snp_rhs_estimate(SEXP Y, SEXP family, SEXP link,
     name_index = create_name_index(Snp_names);
     Rule_names = getAttrib(Rules, R_NamesSymbol);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
   }
@@ -1708,7 +1708,7 @@ SEXP snp_rhs_estimate(SEXP Y, SEXP family, SEXP link,
     index_destroy(name_index);
     for (int i=0; i<pmax; i++)
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   SEXP Class, Package, Lhs;
@@ -1792,7 +1792,7 @@ SEXP wald(const SEXP From) {
 
   double *work = NULL;
   if (maxwork>1) 
-    work = (double *) Calloc((maxwork*(maxwork+1))/2, double);
+    work = (double *) R_Calloc((maxwork*(maxwork+1))/2, double);
   for (int i=0; i<ntest; i++) {
     SEXP Fi = VECTOR_ELT(From, i);
     double wald = NA_REAL;
@@ -1828,7 +1828,7 @@ SEXP wald(const SEXP From) {
   }
 
   if (maxwork>1)
-    Free(work);
+    R_Free(work);
   if (lhs || maxsnp==1)
     UNPROTECT(4);
   else 

@@ -13,10 +13,10 @@ int ipf(int K, const double *observed,
 
 GTYPE *create_gtype_table(const int nsnp) {
   int ngt = (1 << (2*nsnp)) - 1;  /* 4^nsnp - 1 */
-  GTYPE *result = (GTYPE *)Calloc(ngt, GTYPE);
+  GTYPE *result = (GTYPE *)R_Calloc(ngt, GTYPE);
   if (!result)
     return NULL;
-  int *alleles = (int *)Calloc(nsnp, int);
+  int *alleles = (int *)R_Calloc(nsnp, int);
   memset(alleles, 0x00, nsnp*sizeof(int));
   int igt=0;
   while(1) {
@@ -50,7 +50,7 @@ GTYPE *create_gtype_table(const int nsnp) {
     /* Create element in output array */
 
     result[igt].nphase = nph;
-    int *haps = (int *)Calloc(2*nph, int);
+    int *haps = (int *)R_Calloc(2*nph, int);
     if (!haps)
       return NULL;
     result[igt].haps = haps;
@@ -102,7 +102,7 @@ GTYPE *create_gtype_table(const int nsnp) {
       one = (one<<1);
     }
   }
-  Free(alleles); 
+  R_Free(alleles); 
   return result;
 }  
 
@@ -111,9 +111,9 @@ GTYPE *create_gtype_table(const int nsnp) {
 void destroy_gtype_table(GTYPE *gtt, const int nsnp){
   int ngt = (1 << (2*nsnp)) - 1;  /* 4^nsnp - 1 */
   for (int i=0; i<ngt; i++) {
-    Free(gtt[i].haps);
+    R_Free(gtt[i].haps);
   }
-  Free(gtt);
+  R_Free(gtt);
 }
 
 
@@ -182,11 +182,11 @@ int emhap(const int nsnp, const int *gtable, const int *htable,
 
   /* Work arrays */
   
-  double *sum = (double *)Calloc(nht, double);
-  double *prg = (double *)Calloc(maxhaps, double);
+  double *sum = (double *)R_Calloc(nht, double);
+  double *prg = (double *)R_Calloc(maxhaps, double);
   double *prh = NULL;
   if (htable)
-    prh = (double *)Calloc(maxhaps, double);
+    prh = (double *)R_Calloc(maxhaps, double);
 
   /* If no starting values, initialize haplotype frequency vector */
 
@@ -296,10 +296,10 @@ int emhap(const int nsnp, const int *gtable, const int *htable,
 
   if(!gtypes)
     destroy_gtype_table(lookup, nsnp);
-  Free(sum);
-  Free(prg);
+  R_Free(sum);
+  R_Free(prg);
   if (prh)
-    Free(prh);
+    R_Free(prh);
 
   return result;
 }
@@ -422,7 +422,7 @@ double hap_r2(const int npr, const double *hprob){
 
 double gen_r2(const int npr, double *hprob, const GTYPE *gtypes) {
 
-  int *alleles = (int *)Calloc(npr, int);
+  int *alleles = (int *)R_Calloc(npr, int);
   int g = 0;
   for (int i=0, inc=1; i<npr; i++) {
     alleles[i] = 0;
@@ -458,7 +458,7 @@ double gen_r2(const int npr, double *hprob, const GTYPE *gtypes) {
     if (adv==npr)
       break;
   }
-  Free(alleles);
+  R_Free(alleles);
   mu /= sp;
   vp = vp/sp - mu*mu;
   double vo = mu * (1.0 - mu/2.0);

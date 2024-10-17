@@ -27,8 +27,8 @@ int wcenter(const double *y, int n, const double *weight, const int *stratum,
   int empty = 0;
   if (nstrata>1) {
     double *swy, *swt;
-    swy = (double *) Calloc(nstrata, double);
-    swt =  (double *) Calloc(nstrata, double);
+    swy = (double *) R_Calloc(nstrata, double);
+    swt =  (double *) R_Calloc(nstrata, double);
     memset(swy, 0x00, nstrata*sizeof(double));
     memset(swt, 0x00, nstrata*sizeof(double));
     if (weight) {
@@ -58,8 +58,8 @@ int wcenter(const double *y, int n, const double *weight, const int *stratum,
       if (swt[s]) 
 	ynew[i] = resid? y[i] - swy[s]: swy[s];
     }
-    Free(swy);
-    Free(swt);
+    R_Free(swy);
+    R_Free(swt);
   }
   else {
     double swt=0.0, swy=0.0;

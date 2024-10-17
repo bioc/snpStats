@@ -68,8 +68,8 @@ int ipf(int K, const double *observed,
     if (msize>maxsize)
       maxsize = msize;
   }
-  double *mexp = (double *) Calloc(maxsize, double);
-  double *mobs = (double *) Calloc(maxsize, double);
+  double *mexp = (double *) R_Calloc(maxsize, double);
+  double *mobs = (double *) R_Calloc(maxsize, double);
 
   /* IPF */
   
@@ -108,13 +108,13 @@ int ipf(int K, const double *observed,
       }
     }
     if (test<eps) {
-      Free(mobs);
-      Free(mexp);
+      R_Free(mobs);
+      R_Free(mexp);
       return(0); /* Convergence */
     }
     it++;
   }
-  Free(mobs);
-  Free(mexp);
+  R_Free(mobs);
+  R_Free(mexp);
   return(1); /* Maximum steps reached */
 }

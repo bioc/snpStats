@@ -136,17 +136,17 @@ SEXP X_snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
   int pmax = 0;
   if (nrules!=0) {
     name_index = create_name_index(snpNames);
-    add = (double *)Calloc(N, double);
-    dom = (double *)Calloc(N, double);
+    add = (double *)R_Calloc(N, double);
+    dom = (double *)R_Calloc(N, double);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
   }
 
   /* Calculations */
 
-  int *obs = (int *) Calloc(N, int);
+  int *obs = (int *) R_Calloc(N, int);
   int i, j;
   R_xlen_t ij;
   for (i=0; i<N; i++)
@@ -276,14 +276,14 @@ SEXP X_snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
 
   UNPROTECT(15);
 
-  Free(obs);
+  R_Free(obs);
   if (nrules!=0) {
     index_destroy(name_index);
-    Free(add);
-    Free(dom);
+    R_Free(add);
+    R_Free(dom);
     for (int i=0; i<pmax; i++) 
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   return Result;
@@ -401,17 +401,17 @@ SEXP snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
   int pmax = 0;
   if (nrules!=0) {
     name_index = create_name_index(snpNames);
-    add = (double *)Calloc(N, double);
-    dom = (double *)Calloc(N, double);
+    add = (double *)R_Calloc(N, double);
+    dom = (double *)R_Calloc(N, double);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
    }
 
   /* Calculations */
 
-  int *obs = (int *) Calloc(N, int);
+  int *obs = (int *) R_Calloc(N, int);
   int i, j;
   R_xlen_t ij;
   for (i=0; i<N; i++)
@@ -517,14 +517,14 @@ SEXP snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
 
   UNPROTECT(12);
 
-  Free(obs);
+  R_Free(obs);
   if (nrules!=0) {
     index_destroy(name_index);
-    Free(add);
-    Free(dom);
+    R_Free(add);
+    R_Free(dom);
     for (int i=0; i<pmax; i++) 
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   return Result;

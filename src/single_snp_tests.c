@@ -187,10 +187,10 @@ SEXP score_single(const SEXP Phenotype, const SEXP Stratum, const SEXP Snps,
   GTYPE **gt2ht = NULL;
   int pmax = 0;
   if (nrules) {
-    xadd = (double *) Calloc(nsubj, double);
-    xdom = (double *) Calloc(nsubj, double);
+    xadd = (double *) R_Calloc(nsubj, double);
+    xdom = (double *) R_Calloc(nsubj, double);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
   }
@@ -203,9 +203,9 @@ SEXP score_single(const SEXP Phenotype, const SEXP Stratum, const SEXP Snps,
 
     /* Work arrays */
     
-    double **UV = (double **) Calloc(nstrata, double *);
+    double **UV = (double **) R_Calloc(nstrata, double *);
     for (int i=0; i<nstrata; i++) 
-      UV[i] = (double *) Calloc(10, double);
+      UV[i] = (double *) R_Calloc(10, double);
 
     for (int t=0; t<ntest; t++) {
       int i = snp_subset? snp_subset[t] - 1: t; 
@@ -297,18 +297,18 @@ SEXP score_single(const SEXP Phenotype, const SEXP Stratum, const SEXP Snps,
     /* Return work arrays */
 
     for (int i=0; i<nstrata; i++) 
-      Free(UV[i]);
-    Free(UV);
+      R_Free(UV[i]);
+    R_Free(UV);
   }
   else {
 
     /* Work arrays */
     
-    double **UVM = (double **) Calloc(nstrata, double *);
-    double **UVF = (double **) Calloc(nstrata, double *);
+    double **UVM = (double **) R_Calloc(nstrata, double *);
+    double **UVF = (double **) R_Calloc(nstrata, double *);
     for (int i=0; i<nstrata; i++) {
-      UVM[i] = (double *) Calloc(10, double);
-      UVF[i] = (double *) Calloc(10, double);
+      UVM[i] = (double *) R_Calloc(10, double);
+      UVF[i] = (double *) R_Calloc(10, double);
     }
     
     for (int t=0; t<ntest; t++) {
@@ -427,22 +427,22 @@ SEXP score_single(const SEXP Phenotype, const SEXP Stratum, const SEXP Snps,
     /* Return work arrays */
 
     for (int i=0; i<nstrata; i++) {
-      Free(UVM[i]);
-      Free(UVF[i]);
+      R_Free(UVM[i]);
+      R_Free(UVF[i]);
     }
-    Free(UVM);
-    Free(UVF);
+    R_Free(UVM);
+    R_Free(UVF);
   }
 
   /* Tidy up */
 
   if (nrules) {
     index_destroy(name_index);
-    Free(xadd);
-    Free(xdom);
+    R_Free(xadd);
+    R_Free(xdom);
     for (int i=0; i<pmax; i++) 
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
 
   /* Attributes of output object */

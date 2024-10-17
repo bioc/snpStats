@@ -86,31 +86,31 @@ SEXP snp_impute(const SEXP X, const SEXP Y, const SEXP Xord, const SEXP Yord,
 
   /* Work arrays */
 
-  double *xy = (double *)Calloc(try, double);       /* XY covariances */
-  double *xxd = (double *)Calloc(try, double);      /* Diagonals of XX */
-  double *xxi = (double *)Calloc(try*pmax, double); /* Row of XX covars */
-  int *sel = (int *)Calloc(pmax, int);              /* Selected SNPs */
-  double *coef =(double *)Calloc((pmax*(pmax+1))/2, double);/* Coefficients*/ 
-  double *ycoef = (double *)Calloc(pmax, double);   /* Y coefficients */
+  double *xy = (double *)R_Calloc(try, double);       /* XY covariances */
+  double *xxd = (double *)R_Calloc(try, double);      /* Diagonals of XX */
+  double *xxi = (double *)R_Calloc(try*pmax, double); /* Row of XX covars */
+  int *sel = (int *)R_Calloc(pmax, int);              /* Selected SNPs */
+  double *coef =(double *)R_Calloc((pmax*(pmax+1))/2, double);/* Coefficients*/ 
+  double *ycoef = (double *)R_Calloc(pmax, double);   /* Y coefficients */
   COV_WIN_PTR cache = new_window(try, 0);            /* Covariance cache */
 
   /* Work arrays for haplotype phasing etc. */
 
   int tmax = (1 << 2*(pmax+1));  /* Space for 4x4x..x4 table */
   int hmax = (1 << (pmax+1));    /* Space for 2x2x..x2 table */
-  int *tcell = (int *)Calloc(nsubject, int); /* addresses in table */
-  int *contin = (int *)Calloc(tmax, int); 
+  int *tcell = (int *)R_Calloc(nsubject, int); /* addresses in table */
+  int *contin = (int *)R_Calloc(tmax, int); 
   int *hcontin=NULL;
   if (diploid) 
-    hcontin = (int *)Calloc(tmax, int);
-  double *phap = (double *)Calloc(hmax, double);
-  double *phap2 = (double *)Calloc(hmax, double);
+    hcontin = (int *)R_Calloc(tmax, int);
+  double *phap = (double *)R_Calloc(hmax, double);
+  double *phap2 = (double *)R_Calloc(hmax, double);
   /* gtype->htype lookup tables */
-  GTYPE **tables = (GTYPE **)Calloc(pmax+1, GTYPE *);
+  GTYPE **tables = (GTYPE **)R_Calloc(pmax+1, GTYPE *);
   for (int i=0; i<=pmax; i++)
     tables[i] = create_gtype_table(i+1);
   /* This is only big enough for first order model */
-  unsigned int *llmod = (unsigned int *) Calloc(pmax, unsigned int);
+  unsigned int *llmod = (unsigned int *) R_Calloc(pmax, unsigned int);
 
   /* Result */
  
@@ -399,23 +399,23 @@ SEXP snp_impute(const SEXP X, const SEXP Y, const SEXP Xord, const SEXP Yord,
 
   /* Tidy up */
 
-  Free(xy);
-  Free(xxi);
-  Free(xxd);
-  Free(sel);
-  Free(coef);
-  Free(ycoef);
+  R_Free(xy);
+  R_Free(xxi);
+  R_Free(xxd);
+  R_Free(sel);
+  R_Free(coef);
+  R_Free(ycoef);
   free_window(cache);
-  Free(contin);
+  R_Free(contin);
   if (hcontin)
-    Free(hcontin);
-  Free(phap);
-  Free(phap2);
-  Free(tcell);
+    R_Free(hcontin);
+  R_Free(phap);
+  R_Free(phap2);
+  R_Free(tcell);
   for (int i=0; i<=pmax; i++)
     destroy_gtype_table(tables[i], i+1);
-  Free(tables);
-  Free(llmod);
+  R_Free(tables);
+  R_Free(llmod);
 
   UNPROTECT(4);
   return Result;
@@ -648,10 +648,10 @@ void do_impute(const SEXP Obs_snps, const int nrow,
   if (ncoefs==(nsnp+1))  /* Regression imputation */
     error("Old imputation rule; not supported by this version");
   else { /* Imputation from phased haplotypes */
-    int *gt = (int *)Calloc(nuse, int);
+    int *gt = (int *)R_Calloc(nuse, int);
     int *dip = NULL;
     if (diploid)
-      dip = (int *)Calloc(nuse, int);
+      dip = (int *)R_Calloc(nuse, int);
     memset(gt, 0x00, nuse*sizeof(int));
     /* Calculate predictor genotypes */
     for (int j=0, sh=0; j<nsnp; j++, sh+=2) {
@@ -690,9 +690,9 @@ void do_impute(const SEXP Obs_snps, const int nrow,
 	  value_d[i] = NA_REAL;
       }
     }
-    Free(gt);
+    R_Free(gt);
     if (dip)
-      Free(dip);
+      R_Free(dip);
   }
 }
   
@@ -725,8 +725,8 @@ SEXP impute_snps(const SEXP Rules, const SEXP Snps, const SEXP Subset,
     error("Argument error - Subset");
 
 
-  double *w1 = (double *)Calloc(nsubj, double);
-  double *w2 = (double *)Calloc(nsubj, double);
+  double *w1 = (double *)R_Calloc(nsubj, double);
+  double *w2 = (double *)R_Calloc(nsubj, double);
   SEXP Result, Diploid, Dimnames, Class, Package;
   double *dresult = NULL;
   unsigned char *rresult = NULL;
@@ -760,7 +760,7 @@ SEXP impute_snps(const SEXP Rules, const SEXP Snps, const SEXP Subset,
   SET_VECTOR_ELT(Dimnames, 1, getAttrib(Rules, R_NamesSymbol));
   setAttrib(Result, R_DimNamesSymbol, Dimnames);
   int pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-  GTYPE **gt2ht = (GTYPE **)Calloc(pmax, GTYPE *); 
+  GTYPE **gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *); 
   for (int i=0; i<pmax; i++)
     gt2ht[i] = create_gtype_table(i+1);
   R_xlen_t ji=0;
@@ -803,7 +803,7 @@ SEXP impute_snps(const SEXP Rules, const SEXP Snps, const SEXP Subset,
   index_destroy(name_index);
   for (int i=0; i<pmax; i++) 
     destroy_gtype_table(gt2ht[i], i+1);
-  Free(gt2ht);
+  R_Free(gt2ht);
   if (as_numeric)
     UNPROTECT(2);
   else {
@@ -812,8 +812,8 @@ SEXP impute_snps(const SEXP Rules, const SEXP Snps, const SEXP Subset,
     else 
       UNPROTECT(4);
   } 
-  Free(w1);
-  Free(w2);
+  R_Free(w1);
+  R_Free(w2);
   return Result;
 }
 

@@ -22,12 +22,12 @@ void ssqprod_c(const int N, const int Mx, const double *X,
 	       const int My, const double *Y, 
 	       const int *stratum, const int *order,
 	       double *ssp, int *df) {
-  double *sumx = (double *)Calloc(Mx, double);
+  double *sumx = (double *)R_Calloc(Mx, double);
   memset(sumx, 0x00, Mx*sizeof(double));
   double *sumy = NULL;
   int nssp;
   if (My) {
-    sumy = (double *)Calloc(My, double);
+    sumy = (double *)R_Calloc(My, double);
     memset(sumy, 0x00, My*sizeof(double));
     nssp = Mx*My;
   }
@@ -95,9 +95,9 @@ void ssqprod_c(const int N, const int Mx, const double *X,
     }
     *df += (double)(Ns - 1); 
   }
-  Free(sumx);
+  R_Free(sumx);
   if (My)
-    Free(sumy);
+    R_Free(sumy);
 }	  
 
 /* Incomplete lines */
@@ -214,7 +214,7 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
     name_index = create_name_index(Snp_names);
     Rule_names = getAttrib(Rules, R_NamesSymbol);
     pmax = *INTEGER(getAttrib(Rules, install("Max.predictors")));
-    gt2ht = (GTYPE **)Calloc(pmax, GTYPE *);
+    gt2ht = (GTYPE **)R_Calloc(pmax, GTYPE *);
     for (int i=0; i<pmax; i++)
       gt2ht[i] = create_gtype_table(i+1);
   }
@@ -260,7 +260,7 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
   /* Order */
 
   int *order = NULL;
-  int *lorder = Calloc(N, int);
+  int *lorder = R_Calloc(N, int);
   if (TYPEOF(Order)==INTSXP) {
     order = INTEGER(Order);
     for (int i=0; i<N; i++)
@@ -339,7 +339,7 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
 
    /* Require Y rows complete -- regardless of Complete argument */
 
-  int *xmiss = (int *)Calloc(N, int);
+  int *xmiss = (int *)R_Calloc(N, int);
   memset(xmiss, 0x00, N*sizeof(int));
   for (int i=0; i<N; i++) {
     for (int j=0, ij=i; j<M; j++, ij+=N) {
@@ -391,13 +391,13 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
       v = REAL(V);
     }
     else {
-      u = (double *) Calloc(nu, double);
-      v = (double *) Calloc(nv, double);
+      u = (double *) R_Calloc(nu, double);
+      v = (double *) R_Calloc(nv, double);
     }
  
     int *lorder_t = lorder;
     if (complete) {
-      lorder_t = (int *) Calloc(N, int);
+      lorder_t = (int *) R_Calloc(N, int);
       memset(lorder_t, 0x00, N*sizeof(int));
     }
 
@@ -405,7 +405,7 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
     
     /* int space = MAX_NAME-1; unused */
     /* char testname[MAX_NAME]; unused */
-    double *X = (double *)Calloc(N*nsts, double);
+    double *X = (double *)R_Calloc(N*nsts, double);
     memset(xmiss, 0x00, N*sizeof(int));
     for (int j=0, ij=0; j<nsts; j++) {
       int stsj = sts[j];
@@ -466,21 +466,21 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
     if (!Ncomplete) {
       warning("No data -- test skipped");
       if (!score) {
-	Free(u);
-	Free(v);
+	R_Free(u);
+	R_Free(v);
       }
       if (complete)
-	Free(lorder_t);
-      Free(X);
+	R_Free(lorder_t);
+      R_Free(X);
     }
     else {
 
       /* Do calculations */
 
       int nsts2 = (nsts*(nsts+1))/2;
-      double *XX = (double *)Calloc(nsts2, double);
+      double *XX = (double *)R_Calloc(nsts2, double);
       int M2 = (M*(M+1))/2;
-      double *YY = (double *)Calloc(M2, double);
+      double *YY = (double *)R_Calloc(M2, double);
       int df_r;
       int *df_rXX = NULL, *df_rYY = NULL, *df_rXY = NULL;
       double *df_rV; 
@@ -491,15 +491,15 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
       }
       else {
 	error("Incomplete data option not yet implemented");
-	df_rXX = (int *)Calloc(nsts2, int);
-	df_rYY = (int *)Calloc(M2, int);
-	df_rXY = (int *)Calloc(nu, int);
+	df_rXX = (int *)R_Calloc(nsts2, int);
+	df_rYY = (int *)R_Calloc(M2, int);
+	df_rXY = (int *)R_Calloc(nu, int);
 	df_rV = NULL; /* To be corrected */
 	ssqprod_i(N, nsts, X, 0, NULL, stratum, lorder, XX, df_rXX); 
 	ssqprod_i(N, M, Y, 0, NULL, stratum, lorder, YY, df_rYY);
 	ssqprod_i(N, nsts, X, M, Y, stratum, lorder, u, df_rXY);
       }
-      Free(X); 
+      R_Free(X); 
     
       /* Make v matrix  */
   
@@ -521,9 +521,9 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
       int dft = NA_INTEGER;
       
       if (score) {
-	double *w = (double *)Calloc(nv, double);
+	double *w = (double *)R_Calloc(nv, double);
 	ifault = qform(nu, u, v, w, &chi2, &dft);
-	Free(w);
+	R_Free(w);
       }
       else {
 	ifault = qform(nu, u, v, v, &chi2, &dft);
@@ -553,34 +553,34 @@ SEXP mvphen(const SEXP Pheno, const SEXP Snps, const SEXP Rules,
 	UNPROTECT(3);
       }
       else {
-	Free(u);
-	Free(v);
+	R_Free(u);
+	R_Free(v);
       }
-      Free(XX);
-      Free(YY);
+      R_Free(XX);
+      R_Free(YY);
       if(complete) {
-	Free(lorder_t);
+	R_Free(lorder_t);
       }
       else {
-	Free(df_rXX);
-	Free(df_rYY);
-	Free(df_rXY);
-	Free(df_rV);
+	R_Free(df_rXX);
+	R_Free(df_rYY);
+	R_Free(df_rXY);
+	R_Free(df_rV);
       }
     }
   }
 
   /* Return hash table memory and gt->ht tables */
 
-  Free(lorder);
+  R_Free(lorder);
   if (name_index) {
     index_destroy(name_index);
     for (int i=0; i<pmax; i++)
       destroy_gtype_table(gt2ht[i], i+1);
-    Free(gt2ht);
+    R_Free(gt2ht);
   }
-  Free(lorder);
-  Free(xmiss);
+  R_Free(lorder);
+  R_Free(xmiss);
 
   SEXP Class, Package;
   PROTECT(Class = allocVector(STRSXP, 1));

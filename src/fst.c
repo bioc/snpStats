@@ -67,9 +67,9 @@ SEXP Fst(SEXP Snps, SEXP Group, SEXP HapMap) {
 
   /* Work arrays */
 
-  int *na2 = (int *) Calloc(ngrp, int);
-  int *na = (int *) Calloc(ngrp, int);
-  double *gwts = (double *) Calloc(ngrp, double);
+  int *na2 = (int *) R_Calloc(ngrp, int);
+  int *na = (int *) R_Calloc(ngrp, int);
+  double *gwts = (double *) R_Calloc(ngrp, double);
   
   /* Calculate group weights */
 
@@ -148,9 +148,9 @@ SEXP Fst(SEXP Snps, SEXP Group, SEXP HapMap) {
 
   /* Tidy up and return */
 
-  Free(na);
-  Free(na2);
-  Free(gwts);
+  R_Free(na);
+  R_Free(na2);
+  R_Free(gwts);
 
   SEXP Result, Names;
   PROTECT(Result = allocVector(VECSXP, 2));

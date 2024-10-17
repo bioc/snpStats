@@ -117,7 +117,7 @@ int glm_fit(int family, int link, int N, int M, int P, int S,
 
       /* IRLS algorithm */
 
-      double *yw = (double *) Calloc(N, double);
+      double *yw = (double *) R_Calloc(N, double);
       double logL_prev = 0.0;
       while(iter<maxit && !convg) {
 	double logL = 0.0;
@@ -201,7 +201,7 @@ int glm_fit(int family, int link, int N, int M, int P, int S,
       }
       for (int i=0; i<N; i++)
 	fitted[i] =  invlink(link, yw[i] - resid[i]);
-      Free(yw);
+      R_Free(yw);
     }
     else {  
 
@@ -417,11 +417,11 @@ void glm_score_test(int N, int M, int S, const int *stratum,
 
   /* Work array */
 
-  Zri = Zr = (double *) Calloc(N*P, double);
+  Zri = Zr = (double *) R_Calloc(N*P, double);
   int nc = 0;
   if (C) {
     nc = (C==1)? N: C;
-    Ui = U = (double *) Calloc(nc*P, double);
+    Ui = U = (double *) R_Calloc(nc*P, double);
     memset(U, 0x00, nc*P*sizeof(double));
   }
     
@@ -484,9 +484,9 @@ void glm_score_test(int N, int M, int S, const int *stratum,
     if (C)
       Ui += nc;
   }
-  Free(Zr);
+  R_Free(Zr);
   if (C)
-    Free(U);
+    R_Free(U);
 }
 
     
@@ -593,7 +593,7 @@ void meat_matrix(int N, int P, int C, const int *cluster,
   if (!C)
     return;
   if (C>1) {
-    double *Uc = Calloc(C*P, double);
+    double *Uc = R_Calloc(C*P, double);
     memset(Uc, 0x00, C*P*sizeof(double));
     for (int i=0; i<N; i++) {
       double w=resid[i]*weights[i];
@@ -609,7 +609,7 @@ void meat_matrix(int N, int P, int C, const int *cluster,
 	meatrix[ij++] = w;
       }
     }
-    Free(Uc);
+    R_Free(Uc);
   }
   else {
     memset(meatrix,  0x00, sizeof(double)*(P*(P+1))/2);
