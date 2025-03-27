@@ -13,5 +13,6 @@ ld <- function(x, y=NULL, depth=NULL, stats, symmetric=FALSE) {
       warning("depth too large; it has been reset to ", dmax)
     }
   }
+  if (is.null(depth)) depth = NA # checking if a non null val fixes dump
   .Call("ld", x, y, as.integer(depth), cstats, symmetric, PACKAGE="snpStats");
 }

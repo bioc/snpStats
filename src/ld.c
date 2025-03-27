@@ -30,7 +30,8 @@ SEXP ld(SEXP X, SEXP Y, SEXP Depth, SEXP Stats, SEXP Symmetric) {
   char *statnames[7] = {"LLR", "OR", "Q", "Covar", "D.prime", "R.squared", "R"};
   double *arrays[7];
 
-  int depth = *INTEGER(Depth);
+  int depth = *INTEGER(Depth);  /* if Depth provided is NULL, R 4.5 crashes */
+                                /* the R code is revised to ensure that either an integer or NA is supplied */
   
   /* Stats to calculate */
 
