@@ -47,8 +47,8 @@ SEXP X_snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
   SEXP ruleNames = R_NilValue;
   if (!isNull(Rules)) {
     const char *classR = NULL;
-    if (TYPEOF(R_data_class(Rules, FALSE)) == STRSXP) {
-      classR = CHAR(STRING_ELT(R_data_class(Rules, FALSE), 0));
+    if (TYPEOF(R_class(Rules)) == STRSXP) {
+      classR = CHAR(STRING_ELT(R_class(Rules), 0));
     } else {
       classR = CHAR(STRING_ELT(getAttrib(Rules, R_ClassSymbol), 0));
     }
@@ -321,8 +321,8 @@ SEXP snp_summary(const SEXP Snps, const SEXP Rules, const SEXP Uncertain) {
   SEXP ruleNames = R_NilValue;
   if (!isNull(Rules)) {
     const char *classR = NULL;
-    if (TYPEOF(R_data_class(Rules, FALSE)) == STRSXP) {
-      classR = CHAR(STRING_ELT(R_data_class(Rules, FALSE), 0));
+    if (TYPEOF(R_class(Rules)) == STRSXP) {
+      classR = CHAR(STRING_ELT(R_class(Rules), 0));
     } else {
       classR = CHAR(STRING_ELT(getAttrib(Rules, R_ClassSymbol), 0));
     }
