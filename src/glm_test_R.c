@@ -24,7 +24,7 @@ SEXP snp_lhs_score(const SEXP Y, const SEXP X, const SEXP Stratum,
   } else {
     classY = CHAR(STRING_ELT(getAttrib(Y, R_ClassSymbol), 0));
   }
-  if(!IS_S4_OBJECT(Y)) {
+  if(!Rf_isS4(Y)) {
     error("Y in snp_lhs_score is missing S4 Object bit");
   }
   int ifX = 0;
@@ -443,7 +443,7 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
     ifX = 1;
   else 
     error("Argument error - class(Z)");
-  if (!IS_S4_OBJECT(Z)) {
+  if (!Rf_isS4(Z)) {
     error("Z in snp_rhs_score is missing S4 Object bit");
   }
  
@@ -1008,7 +1008,7 @@ SEXP snp_lhs_estimate(const SEXP Y, const SEXP X, const SEXP Stratum,
   } else {
     classY = CHAR(STRING_ELT(getAttrib(Y, R_ClassSymbol), 0));
   }
-  if(!IS_S4_OBJECT(Y)) {
+  if(!Rf_isS4(Y)) {
     error("Y in snp_lhs_score is missing S4 Object bit");
   }
   int ifX = 0;
@@ -1365,7 +1365,7 @@ SEXP snp_rhs_estimate(SEXP Y, SEXP family, SEXP link,
   } else {
     classZ = CHAR(STRING_ELT(getAttrib(Z, R_ClassSymbol), 0));
   }
-  if(!IS_S4_OBJECT(Z)) {
+  if(!Rf_isS4(Z)) {
     error("Z in snp_rhs_score is missing S4 Object bit");
   }
   int ifX = 0;

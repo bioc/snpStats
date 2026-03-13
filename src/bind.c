@@ -22,7 +22,7 @@ SEXP snp_rbind(SEXP args) {
       Class = R_class(This);
     }
     const char *cli = CHAR(STRING_ELT(Class, 0));
-    if(!IS_S4_OBJECT(This)) {
+    if(!Rf_isS4(This)) {
       warning("rbinding SnpMatrix object without S4 object bit");
     }
     int nci = ncols(This);
@@ -151,7 +151,7 @@ SEXP snp_cbind(SEXP args) {
       Class = R_class(This);
     }
     const char *cli = CHAR(STRING_ELT(Class, 0));
-    if(!IS_S4_OBJECT(This)) {
+    if(!Rf_isS4(This)) {
       warning("cbinding SnpMatrix object without S4 object bit");
     }
     SEXP Di = R_NilValue;

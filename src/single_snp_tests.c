@@ -67,7 +67,7 @@ SEXP score_single(const SEXP Phenotype, const SEXP Stratum, const SEXP Snps,
     ifX = 0; /* to avoid warning message */
     error("Argument error - class(Snps)");
   }
-  if(!IS_S4_OBJECT(Snps)) {
+  if(!Rf_isS4(Snps)) {
     error("Argument error - Snps is not S4 object");
   }
 
