@@ -302,7 +302,7 @@ SEXP snp_lhs_score(const SEXP Y, const SEXP X, const SEXP Stratum,
         
     if (P>1) {
       if (qform(P, u, v, NULL, chisq+t, df+t)) {
-	warning("Matrix not positive semi-definite in test ", t+1);
+	warning("Matrix not positive semi-definite in test %d", t+1);
 	chisq[t] = NA_REAL;
 	df[t] = NA_INTEGER;
       }
@@ -802,7 +802,7 @@ SEXP snp_rhs_score(SEXP Y, SEXP family, SEXP link,
     nused[test] = nu;
     if (nsnpt>1) {
       if (qform(nsnpt, u, v, NULL, chisq+test, df+test)) {
-	warning("Matrix not positive semi-definite in test ", test+1);
+	warning("Matrix not positive semi-definite in test %d", test+1);
 	chisq[test] = NA_REAL;
 	df[test] = NA_INTEGER;
       }
@@ -934,7 +934,7 @@ SEXP pool2_glm(SEXP X, SEXP Y, SEXP If_score) {
       rv[j] = xiv[j] + yiv[j];
     if (nu>1) {
       if (qform(nu, ru, rv, NULL, chisq+i, df+i)) {
-	warning("Matrix not positive semi-definite in pooled test ", i+1);
+	warning("Matrix not positive semi-definite in pooled test %d", i+1);
 	chisq[i] = NA_REAL;
 	df[i] = NA_INTEGER;
       }
